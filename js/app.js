@@ -1,4 +1,4 @@
-var ticTacToe = (function(){
+//var ticTacToe = (function(){
 	var board = document.getElementById('board');
 	var finish = document.getElementById('finish');
 	var start = document.getElementById('start');
@@ -19,21 +19,30 @@ var ticTacToe = (function(){
 
 
 	/* Elements to Run on first load of the file */
+	
+	//Object constructor for the boxes objects. This will be used to determine what boxes have what symbols and if they are simply filled or not.
+	function boxes(number, filled, symbol){
+		this.number = number;
+		this.filled = filled;
+		this.symbol = symbol;
+
+	}
+
 	start.classList.add('visible');
 	startButtonPlayer1.classList.add('visible');
 	
 	var index = 1;
-	//Add an index to each box on the board
+	//Loop through each box and apply listeners as well as create an object for each box so that it can be indexed via the
+	//boxArray arary later.
 	for(var i = 0; i < box.length; i++){
+		var boxTemp = new boxes(index, false, "none");
+		boxArray.push(boxTemp);
 		box[i].classList.add(index);
+		hoverBoxes(box[i]);
+		clickBoxes(box[i]);
 		index++;
 	}
 
-	//Apply click and hover listeners to the box functions
-	for(var x = 0; x < box.length; x++){
-		hoverBoxes(box[x]);
-		clickBoxes(box[x]);
-	}
 
 	//Apply click listenrs to the game type (Human vs Computer) options
 	opponentType(humanChoice);
@@ -71,7 +80,7 @@ var ticTacToe = (function(){
 
 			if(element.nextElementSibling){
 				if(element.nextElementSibling.classList.contains('active')){
-					element.nextElementSibling.classList.remove('active')
+					element.nextElementSibling.classList.remove('active');
 				}
 			}
 
@@ -102,22 +111,7 @@ var ticTacToe = (function(){
 		} else if(this.turnStatus === "Yes"){
 			this.turnStatus = "No";
 		}
-	}
-
-	//Object constructor for the boxes objects. This will be used to determine what boxes have what symbols and if they are simply filled or not.
-	function boxes(number, filled, symbol){
-		this.number = number;
-		this.filled = filled;
-		this.symbol = symbol;
-
-	}
-
-	//Creates an Object for each box and stores it in the BoxArray "array" so that it can be accessed later
-	//via indexing
-	for(var i = 1; i <= box.length; i++){
-		var boxTemp = new boxes(i, false, "none");
-		boxArray.push(boxTemp);
-	}
+	};
 
 
 	//This changes the "turn" box in the upper right and left parts of the body
@@ -218,7 +212,6 @@ var ticTacToe = (function(){
 		displayNone(board);
 		displayBlock(finish);
 		var pFinish = finish.querySelector('p');
-		var boxes = document.getElementsByClassName('box');
 
 		if(number % 2 === 0 && number < 10){
 			pFinish.innerHTML = player2.firstName + " " + player2.lastName + " Wins!";
@@ -238,7 +231,7 @@ var ticTacToe = (function(){
 			} else {
 				box[choice].click();
 			}
-		}, 500)
+		}, 500);
 	}
 
 	/*The Click boxes function is what runs the majority of the game as it's purpose to apply styles
@@ -276,9 +269,9 @@ var ticTacToe = (function(){
 				if(count % 2 === 0){
 					element.classList.add('box-filled-2');
 					boxArray[boxIndex].symbol = "X";
-					var player2Check = player2GameCheck()
+					var player2Check = player2GameCheck();
 					if(player2Check){
-						finish.classList.add('screen-win-two')
+						finish.classList.add('screen-win-two');
 						runGameOver(count);
 						return false;
 					}
@@ -328,17 +321,17 @@ var ticTacToe = (function(){
 		player1Div.classList.remove('active');
 		player2Div.classList.add('active');
 
+		//Create the player 1 object based on the inputs from the user
 		player1 = new newPlayer(1, inputs[0].value, inputs[1].value, turn[1], symbol[0], "Human");
 
 	});
 
-	//BUTTON TO SUBMIT PLAYER 2 NAME & START THE GAME
+	//Apply a second click lister to the Player 2 input screen. This is what ultimately starts the game as well as creates the player2 object
 	startButtonReady.addEventListener('click', function(){
 		var player2Div = document.getElementsByClassName('player-2-input')[0];
 		var inputs = player2Div.querySelectorAll('input');
 		var player1Name = document.getElementById('player1-name');
 		var player2Name = document.getElementById('player2-name');
-		var checkBox = true;
 
 		for(var i = 0; i < inputs.length; i++){
 			if(inputs[i].value === ""){
@@ -349,6 +342,7 @@ var ticTacToe = (function(){
 			}
 		}
 
+		//Create the player2 object based on the users input and what type of player player2 will actually be.
 		player2 = new newPlayer(2, inputs[0].value, inputs[1].value, turn[0], symbol[1], gameType);
 
 		player1Name.innerHTML = player1.firstName + " " + player1.lastName;
@@ -360,7 +354,7 @@ var ticTacToe = (function(){
 
 	});
 
-
+	//Add an click listner onto the restart game button which appears in the finish section
 	startAgainButton.addEventListener('click', function(){
 
 		displayNone(finish);
@@ -404,6 +398,6 @@ var ticTacToe = (function(){
 		}
 
 	});
-});	
+//});	
 
-ticTacToe();	
+//ticTacToe();	
